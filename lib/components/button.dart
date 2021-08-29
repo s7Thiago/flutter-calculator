@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
+  static const DARK = Color.fromRGBO(82, 82, 82, 1);
+  static const DEFAULT = Color.fromRGBO(112, 112, 112, 1);
+  static const OPERATION = Color.fromRGBO(250, 158, 13, 13);
   final String text;
   final bool big;
+  final Color color;
 
   const Button({
     Key? key,
     required this.text,
     this.big = false,
+    this.color = DEFAULT,
+  }) : super(key: key);
+
+  const Button.big({
+    Key? key,
+    required this.text,
+    this.big = true,
+    this.color = DEFAULT,
+  }) : super(key: key);
+
+  const Button.operation({
+    Key? key,
+    required this.text,
+    this.big = false,
+    this.color = OPERATION,
   }) : super(key: key);
 
   @override
@@ -15,6 +34,9 @@ class Button extends StatelessWidget {
     return Expanded(
       flex: big ? 2 : 1,
       child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+        ),
         child: Text(
           text,
           style: const TextStyle(

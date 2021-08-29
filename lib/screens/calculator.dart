@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 import '../components/display.dart';
@@ -11,6 +13,7 @@ class Calculator extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Column(
+        // ignore: prefer_const_literals_to_create_immutables
         children: [
           Display('12345'),
           Keyboard(),
