@@ -14,9 +14,17 @@ class Keyboard extends StatelessWidget {
         children: [
           const ButtonRow(
             buttons: [
+              Button(text: 'AC'),
+              Button(text: '%'),
+              Button(text: '/'),
+            ],
+          ),
+          const ButtonRow(
+            buttons: [
               Button(text: '7'),
               Button(text: '8'),
               Button(text: '9'),
+              Button(text: 'x'),
             ],
           ),
           const ButtonRow(
@@ -24,6 +32,7 @@ class Keyboard extends StatelessWidget {
               Button(text: '4'),
               Button(text: '5'),
               Button(text: '6'),
+              Button(text: '-'),
             ],
           ),
           const ButtonRow(
@@ -31,6 +40,14 @@ class Keyboard extends StatelessWidget {
               Button(text: '1'),
               Button(text: '2'),
               Button(text: '3'),
+              Button(text: '+'),
+            ],
+          ),
+          const ButtonRow(
+            buttons: [
+              Button(text: '0'),
+              Button(text: '.'),
+              Button(text: '='),
             ],
           ),
         ],
