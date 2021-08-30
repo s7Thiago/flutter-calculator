@@ -10,7 +10,7 @@ class Memory {
   int _bufferIndex = 0;
 
   // Armazena a operação atual
-  String operation = '';
+  String? _operation = '';
   String _value = '0';
   bool _wipeValue = false;
 
@@ -29,7 +29,36 @@ class Memory {
   }
 
   _setOperation(String newOperation) {
-    _wipeValue = true;
+    bool isEqualSign = newOperation == '=';
+
+    // Após inserir um caractere de operação, o valor do índice do buffer é atualizado
+    // caso ainda esteja referenciando a primeira posição do buffer
+    if (_bufferIndex == 0) {
+      // Evita o problema onde ao digitar um elemento e o primeiro operador é o =
+      // era passado um valor inválido para o segundo elemento do buffer
+      if (!isEqualSign) {
+        _operation = newOperation;
+        _bufferIndex = 1;
+        _wipeValue = true;
+      }
+    } else {
+      // Se o índice do buffer for 1, significa que o usuário já digitou um valor
+      // desse modo, o valor do buffer[0] é atualizado com o resultado da operação
+      // e o buffer[1] é zerado
+      _buffer[0] = _calculate();
+      _buffer[1] = 0.0;
+
+      // Exibindo o resultado no display
+      _value = _buffer[0].toString();
+
+      // Quando o valor no display é inteiro, não exibe o ponto decimal
+      _value = _value.endsWith('.0') ? _value.split('.')[0] : _value;
+
+      _operation = isEqualSign ? null : newOperation;
+      _bufferIndex = isEqualSign ? 0 : 1;
+    }
+
+    _wipeValue = true; //* !isEqualSign;
   }
 
   _addDigit(String digit) {
@@ -51,9 +80,32 @@ class Memory {
     // Convertendo o valor obtido para número e transferindo para o buffer
     // Se por algum motivo não dor possível fazer o parse do valor obtido para número, o valor é 0
     _buffer[_bufferIndex] = double.tryParse(_value) ?? 0;
+
+    print(_buffer);
   }
 
   void _clearAll() {
     _value = '0';
+    _buffer.setAll(0, [0.0, 0.0]);
+    _operation = null;
+    _bufferIndex = 0;
+    _wipeValue = false;
+  }
+
+  _calculate() {
+    switch (_operation) {
+      case '%':
+        return _buffer[0] % _buffer[1];
+      case '/':
+        return _buffer[0] / _buffer[1];
+      case 'x':
+        return _buffer[0] * _buffer[1];
+      case '-':
+        return _buffer[0] - _buffer[1];
+      case '+':
+        return _buffer[0] + _buffer[1];
+      default:
+        return _buffer[0];
+    }
   }
 }
