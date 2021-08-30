@@ -34,23 +34,23 @@ class Memory {
 
   _addDigit(String digit) {
     // Se no display tem apenas zero, e um caractere é digitado, o zero é substituído por esse caractere
-    final wipeValue = _value == '0' || _wipeValue;
-    final currentValue = wipeValue ? '' : _value;
+    final isDot = digit == '.';
+    final wipeValue = (_value == '0' && !isDot) || _wipeValue;
 
-    // Conta quantos caracteres ponto tem no display
-    int contDots = 0;
-    for (int i = 0; i < _value.length; i++) {
-      if (_value[i] == '.') contDots++;
-    }
+    // Tratamento para não adicionar mais de um caractere ponto no display
+    if (isDot && _value.contains('.') && !wipeValue) return;
 
-    // Tratamento para não adicionar mais de um ponto no display
-    if (digit != '.') {
-      _value = currentValue + digit;
-    } else if (contDots == 0) {
-      _value = currentValue + digit;
-    }
+    final emptyValue = isDot ? '0' : '';
 
+    // Se a UI estiver limpando a tela, e o caractere a ser adicionado for um ponto, atribui zero ao display para evitar
+    //  o problema onde o ponto aparece no início do display
+    final currentValue = wipeValue ? emptyValue : _value;
+    _value = currentValue + digit;
     _wipeValue = false;
+
+    // Convertendo o valor obtido para número e transferindo para o buffer
+    // Se por algum motivo não dor possível fazer o parse do valor obtido para número, o valor é 0
+    _buffer[_bufferIndex] = double.tryParse(_value) ?? 0;
   }
 
   void _clearAll() {
