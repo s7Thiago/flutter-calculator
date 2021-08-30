@@ -14,9 +14,18 @@ class Memory {
   String _value = '0';
   bool _wipeValue = false;
 
+  // Controla qual foi o último operador recebido pela calculadora para evitar o problema onde
+  // o usuário não podia trocar de operação ao clicar em um operador diferente do último
+  String _lastCommand = '';
+
   String get value => _value;
 
   void applyCommand(String command) {
+    if (_isReplacingOperation(command)) {
+      _operation = command;
+      return;
+    }
+
     if (command == 'AC') {
       // Quando o usuário clica em AC, limpa a tela
       _clearAll();
@@ -26,6 +35,18 @@ class Memory {
     } else {
       _addDigit(command);
     }
+
+    _lastCommand = command;
+  }
+
+  // Verifica se o usuário está substituindo a operação
+  _isReplacingOperation(String command) {
+    // Se o comando anterior e o atual são suportados
+    // E os dois últimos comandos são diferentes de =
+    return operations.contains(_lastCommand) &&
+        operations.contains(command) &&
+        _lastCommand != '=' &&
+        command != '=';
   }
 
   _setOperation(String newOperation) {
@@ -80,8 +101,6 @@ class Memory {
     // Convertendo o valor obtido para número e transferindo para o buffer
     // Se por algum motivo não dor possível fazer o parse do valor obtido para número, o valor é 0
     _buffer[_bufferIndex] = double.tryParse(_value) ?? 0;
-
-    print(_buffer);
   }
 
   void _clearAll() {
