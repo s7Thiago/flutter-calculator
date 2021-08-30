@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../components/display.dart';
 import '../components/keyboard.dart';
@@ -24,6 +25,8 @@ class _CalculatorState extends State<Calculator> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Column(
